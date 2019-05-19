@@ -73,7 +73,7 @@ class KycController extends BaseController {
 create = async (req, res, next) => {
    
   const id = req.user._id
-  
+  console.log('we are logged in')
     
    
     try {
