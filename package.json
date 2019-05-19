@@ -50,6 +50,7 @@
     "mongoose": "^4.6.5",
     "morgan": "^1.7.0",
     "multer": "^1.4.1",
+    "nodemon": "^1.11.0",
     "nodemailer": "^5.1.1",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
