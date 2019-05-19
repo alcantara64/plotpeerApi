@@ -1,10 +1,8 @@
 import BaseController from './base.controller';
 import User from '../models/user';
-import Project from '../models/project';
-import Wallet from '../models/wallet';
 
 
-class UsersController extends BaseController {
+class KycController extends BaseController {
 
   whitelist = [
     'firstname',
@@ -73,20 +71,17 @@ class UsersController extends BaseController {
   }
 
 create = async (req, res, next) => {
-    const params = this.filterParams(req.body, this.whitelist);
-  const email = req.body.email;
+   
+  const id = req.user._id
   
-    let newUser = new User({
-      ...params,
-      provider: 'local',
-    });
+    
    
     try {
-      const savedUser = await newUser.save();
-      const token = savedUser.generateToken();
+      const savedUser = await User.findOneAndUpdate({_id:id, kyc_status:2});
+      
      
 
-      res.status(201).json({ token });
+      res.status(201).json({ savedUser });
     } catch(err) {
       err.status = 400;
       next(err);
@@ -94,10 +89,10 @@ create = async (req, res, next) => {
   }
   
   update = async (req, res, next) => {
-    const newAttributes = this.filterParams(req.body, this.whitelist);
-    const updatedUser = Object.assign({}, req.currentUser, newAttributes);
-   console.log(req.file);
-   return;
+    //const newAttributes = this.filterParams(req.body, this.whitelist);
+    //const updatedUser = Object.assign({}, req.currentUser, newAttributes);
+    console.log(req.file)
+   return
     try {
       res.status(200).json(await updatedUser.save());
     } catch (err) {
@@ -121,4 +116,4 @@ create = async (req, res, next) => {
   }
 }
 
-export default new UsersController();
+export default new KycController();

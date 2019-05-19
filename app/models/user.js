@@ -36,7 +36,7 @@ const UserSchema = new Schema({
             },
         kyc_status: {
           type: Number,
-          enum: [0, 1],
+          enum: [0, 1,2],
           default: 0,
             },
 },

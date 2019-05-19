@@ -1,16 +1,19 @@
 import { Router } from 'express';
 
+
 import MetaController from './controllers/meta.controller';
 import AuthController from './controllers/auth.controller';
 import UsersController from './controllers/users.controller';
 import PostsController from './controllers/posts.controller';
 import ProjectController from './controllers/projects.controller';
 import WalletController from './controllers/wallet.controller';
-
+import multer from 'multer';
+const upload = multer({dest:'uploads/'});
 import authenticate from './middleware/authenticate';
 import accessControl from './middleware/access-control';
 import errorHandler from './middleware/error-handler';
 import walletController from './controllers/wallet.controller';
+import kycController from './controllers/kyc.controller';
 
 const routes = new Router();
 
@@ -45,6 +48,8 @@ routes.post('/projects', authenticate, ProjectController.create);
 routes.get('/projects/:id', ProjectController._populate, ProjectController.fetch);
 routes.delete('/projects/:id', authenticate, ProjectController.delete);
 
+//kyc
+routes.post('/users/kyc', [authenticate, upload.single('file')], kycController.create);
 
 // Post
 routes.get('/posts', PostsController.search);
