@@ -71,13 +71,20 @@ class KycController extends BaseController {
   }
 
 create = async (req, res, next) => {
-   
-  const id = req.user._id
-  console.log('we are logged in')
+  const user = req.user || req.currentUser;
+  const id = user._id;
+  const allowedExtentions = ['png','jpg','jpeg']
+  console.log(req.file)
+  if(!allowedExtentions.includes(req.file.mimetype)){
+  res.status(400).json({error:'unsupported type'});
+  return
+  }
     
-   
     try {
-      const savedUser = await User.findOneAndUpdate({_id:id, kyc_status:2});
+      const savedUser = await User.findByIdAndUpdate(
+        id, {kyc_status:3,kycImage:req.file.path}
+      
+      );
       
      
 

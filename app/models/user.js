@@ -29,6 +29,7 @@ const UserSchema = new Schema({
      state: String,
      country: String,
      dob: String,
+     kycImage:String,
      aml_status: {
       type: Number,
       enum: [0, 1],
@@ -36,8 +37,8 @@ const UserSchema = new Schema({
             },
         kyc_status: {
           type: Number,
-          enum: [0, 1,2],
-          default: 0,
+          enum: [0, 1,2,3],
+          default: 3,
             },
 },
 
