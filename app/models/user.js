@@ -7,7 +7,8 @@ import Constants from '../config/constants';
 
 const Schema = mongoose.Schema;
 const UserSchema = new Schema({
-  fullname: String,
+  firstname: String,
+  lastname : String,
   email: { 
     type: String,
     unique: true,
