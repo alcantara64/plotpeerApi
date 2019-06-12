@@ -13,7 +13,8 @@ class UsersController extends BaseController {
     'phone',
     'password',
     'aml',
-    'kyc'
+    'kyc',
+    
   ];
 
   
@@ -97,12 +98,17 @@ create = async (req, res, next) => {
   update = async (req, res, next) => {
     const newAttributes = this.filterParams(req.body, this.whitelist);
     const updatedUser = Object.assign({}, req.currentUser, newAttributes);
-   
-    try {
-      res.status(200).json(await updatedUser.save());
-    } catch (err) {
-      next(err);
-    }
+    User.findByIdAndUpdate(req.currentUser._id,newAttributes,(err,doc)=>{
+      if(err){
+        next(err);
+      }
+      try {
+        res.status(200).json(doc.save);
+      } catch (err) {
+        next(err);
+      }
+    })
+    
   }
 
   
