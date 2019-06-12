@@ -27,8 +27,6 @@ const transport = this.emailSetup()
     from: process.env.EMAIL_FROM||'plotpeer@gmail.com', // sender address
     to: user, // list of receivers
     subject: "Comfirmation Email ✔", // Subject line
-    text: `<p>Dear ${name}</p><b>Thank you for registering with us </b> <br/> 
-    please use the link below to comfirm your email ${process.env.HOST}/comfirm?token=${token}`  , // plain text body
   html: `<p>Dear ${name}</p><b>Thank you for registering with us </b> <br/> 
   please use the link below to comfirm your email <a href="${process.env.HOST}/comfirm?token=${token}">${process.env.HOST}/comfirm?token=${token}</a>` // html body
 }

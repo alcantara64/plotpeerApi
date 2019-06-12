@@ -21,9 +21,14 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['developer', 'customer'],
+    enum: ['developer', 'customer','admin'],
     default: 'customer',
   },
+  comfirmStatus:{
+    type:Boolean,
+    default:false
+  },
+  emailComfirmToken : String,
   address: String,
      city: String,
      phone: String,
@@ -135,6 +140,20 @@ UserSchema.methods = {
    */
   _hashPassword(password, saltRounds = Constants.security.saltRounds, callback) {
     return bcrypt.hash(password, saltRounds, callback);
+  },
+  generateComfirmationUrlToken(){
+    return jwt.sign(
+      { 
+        _id: this._id ,
+        email:this.email,
+        comfirmStatus:true
+      }, 
+      Constants.security.sessionSecret, {
+      expiresIn: Constants.security.sessionExpiration,
+    });
+  },
+  setComfirmationToken(){
+    this.emailComfirmToken = this.generateComfirmationUrlToken;
   },
    getConfirmationUrl() {
     return `${process.env.HOST}/confirmation/${this.generateToken()}`;

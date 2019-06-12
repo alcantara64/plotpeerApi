@@ -10,6 +10,7 @@ class UsersController extends BaseController {
     'firstname',
     'lastname',
     'email',
+    'phone',
     'password',
     'aml',
     'kyc'
@@ -96,8 +97,7 @@ create = async (req, res, next) => {
   update = async (req, res, next) => {
     const newAttributes = this.filterParams(req.body, this.whitelist);
     const updatedUser = Object.assign({}, req.currentUser, newAttributes);
-   console.log(req.file);
-   return;
+   
     try {
       res.status(200).json(await updatedUser.save());
     } catch (err) {

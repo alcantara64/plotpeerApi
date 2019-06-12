@@ -71,14 +71,17 @@ class KycController extends BaseController {
   }
 
 create = async (req, res, next) => {
+  if(req.file){
+   
+  
   const user = req.user || req.currentUser;
   const id = user._id;
-  const allowedExtentions = ['png','jpg','jpeg']
-  console.log(req.file)
-  if(!allowedExtentions.includes(req.file.mimetype)){
-  res.status(400).json({error:'unsupported type'});
-  return
-  }
+  //const allowedExtentions = ['png','jpg','jpeg']
+  
+  // if(!allowedExtentions.includes(req.file.mimetype)){
+  // res.status(400).json({error:'unsupported type'});
+  // return
+  // }
     
     try {
       const savedUser = await User.findByIdAndUpdate(
@@ -93,6 +96,7 @@ create = async (req, res, next) => {
       err.status = 400;
       next(err);
     }
+  }
   }
   
   update = async (req, res, next) => {

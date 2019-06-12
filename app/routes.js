@@ -9,7 +9,7 @@ import ProjectController from './controllers/projects.controller';
 import WalletController from './controllers/wallet.controller';
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './uploads')
+      cb(null, './public')
     },
     filename:  (req, file, cb) => {
       cb(null,    Date.now() + '-'+ file.originalname )
