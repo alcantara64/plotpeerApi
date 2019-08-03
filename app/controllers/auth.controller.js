@@ -15,6 +15,7 @@ class AuthController extends BaseController {
       if (!user || !user.authenticate(password)) {
         const err = new Error('Please verify your credentials.');
         err.status = 401;
+        err.message = 'invalid credentials'
         return next(err);
       }
 

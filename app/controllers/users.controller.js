@@ -1,7 +1,5 @@
 import BaseController from './base.controller';
 import User from '../models/user';
-import Project from '../models/project';
-import Wallet from '../models/wallet';
 
 
 class UsersController extends BaseController {
@@ -46,24 +44,6 @@ class UsersController extends BaseController {
       next(err);
     }
   }
-
-  dashboard = async (req,res,next) => {
-    try {
-      const user = req.user || req.currentUser;
-      if(!user){
-        return res.sendStatus(404);
-      }
-     const projectsCount  = Project.find({User:user._id});
-     const Wallet = Wallet.find({User:user_id});
-     return res.sendStatus(404).json(projectsCount);
-      
-  }catch(err){
-    next()
-  }
-
-  
-  }
-
 
   fetch = (req, res) => {
     const user = req.user || req.currentUser;
@@ -117,7 +97,6 @@ create = async (req, res, next) => {
     if (!req.currentUser) {
       return res.sendStatus(403);
     }
-
     try {
       await req.currentUser.remove();
       res.sendStatus(204);

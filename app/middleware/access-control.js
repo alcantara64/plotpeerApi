@@ -14,7 +14,7 @@ export default function accessControl(role) {
 
   return (req, res, next) => authenticate(req, res, (err) => {
     const currentRoleIndex = Constants.userRoles.indexOf(req.currentUser.role);
-
+console.log(req.currentUser.role, 'cuurent role index')
     if (
       err ||
       !req.currentUser ||

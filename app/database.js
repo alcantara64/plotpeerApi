@@ -10,8 +10,8 @@ import Constants from './config/constants';
  // throw err;
 //});
  const options = {
-  useMongoClient: true,
- // useNewUrlParser: true,
+ 
+  useNewUrlParser: false,
   //useCreateIndex: true,
   //useFindAndModify: false,
   autoIndex: false, // Don't build indexes
@@ -28,7 +28,6 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connect(Constants.mongo.uri, options, (err) => {
   if (err) {
     console.error(err);
-    console.log("not connected");
     return;
   }
   console.log("Connected to database sucessfully");

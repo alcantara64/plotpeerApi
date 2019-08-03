@@ -7,14 +7,8 @@ import UsersController from './controllers/users.controller';
 import PostsController from './controllers/posts.controller';
 import ProjectController from './controllers/projects.controller';
 import WalletController from './controllers/wallet.controller';
-let storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './public')
-    },
-    filename:  (req, file, cb) => {
-      cb(null,    Date.now() + '-'+ file.originalname )
-    }
-  })
+import Admincontroller from './controllers/admin.controller';
+
 import multer from 'multer';
 const upload = multer({storage:storage});
 import authenticate from './middleware/authenticate';
@@ -22,6 +16,15 @@ import accessControl from './middleware/access-control';
 import errorHandler from './middleware/error-handler';
 import walletController from './controllers/wallet.controller';
 import kycController from './controllers/kyc.controller';
+
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public')
+  },
+  filename:  (req, file, cb) => {
+    cb(null,    Date.now() + '-'+ file.originalname )
+  }
+})
 
 const routes = new Router();
 
@@ -35,7 +38,7 @@ routes.post('/auth/register',AuthController.create);
 
 
 // Users
-routes.get('/user/dashboard',authenticate, UsersController.dashboard);
+//routes.get('/user/dashboard',authenticate, UsersController.dashboard);
 routes.get('/users', UsersController.search);
 routes.get('/users/me', authenticate, UsersController.fetch);
 routes.put('/users/me', authenticate, UsersController.update);
@@ -67,7 +70,9 @@ routes.delete('/posts/:id', authenticate, PostsController.delete);
 
 // Admin
 routes.get('/admin', accessControl('admin'), MetaController.index);
-routes.get('/admin/users', accessControl('admin'), ProjectController.search);
+routes.get('/admin/users', accessControl('admin'), Admincontroller.users);
+routes.get('/admin/user/:id',accessControl('admin'), Admincontroller.user);
+routes.put('/admin/kyc',accessControl('admin'), Admincontroller.updateKycRequest);
 
 routes.use(errorHandler);
 

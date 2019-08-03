@@ -34,10 +34,10 @@ class KycController extends BaseController {
     }
   }
 
-  search = async (req, res, next) => {
+  getPenndingRequest = async (req, res, next) => {
     try {
       // @TODO Add pagination
-      res.json(await User.find());
+      res.json(await User.find({kyc_status:null}));
     } catch(err) {
       next(err);
     }
@@ -85,7 +85,7 @@ create = async (req, res, next) => {
     
     try {
       const savedUser = await User.findByIdAndUpdate(
-        id, {kyc_status:3,kycImage:req.file.path}
+        id, {kyc_status:2,kycImage:req.file.path}
       
       );
       
