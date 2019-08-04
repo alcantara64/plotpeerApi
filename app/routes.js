@@ -73,6 +73,7 @@ routes.get('/admin', accessControl('admin'), MetaController.index);
 routes.get('/admin/users', accessControl('admin'), Admincontroller.users);
 routes.get('/admin/user/:id',accessControl('admin'), Admincontroller.user);
 routes.put('/admin/kyc',accessControl('admin'), Admincontroller.updateKycRequest);
+routes.get('/admin/kyc/:id', Admincontroller.shuptiproverifcation);
 
 routes.use(errorHandler);
 
