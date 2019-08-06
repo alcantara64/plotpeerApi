@@ -43,8 +43,8 @@ const UserSchema = new Schema({
             },
         kyc_status: {
           type: String,
-          enum: ['pending', 'approved','rejected'],
-          default: 'pending',
+          enum: ['awaiting','pending', 'approved','rejected'],
+          default: 'awaiting',
             },
 },
 
