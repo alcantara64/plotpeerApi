@@ -70,9 +70,9 @@ routes.delete('/posts/:id', authenticate, PostsController.delete);
 
 // Admin
 routes.get('/admin', accessControl('admin'), MetaController.index);
-routes.get('/admin/users', accessControl('admin'), Admincontroller.users);
-routes.get('/admin/user/:id',accessControl('admin'), Admincontroller.user);
-routes.put('/admin/kyc',accessControl('admin'), Admincontroller.updateKycRequest);
+routes.get('/admin/users', accessControl('customer'), Admincontroller.users);
+routes.get('/admin/user/:id',accessControl('customer'), Admincontroller.user);
+routes.put('/admin/kyc',accessControl('customer'), Admincontroller.updateKycRequest);
 routes.get('/admin/kyc/:id', Admincontroller.shuptiproverifcation);
 
 routes.use(errorHandler);

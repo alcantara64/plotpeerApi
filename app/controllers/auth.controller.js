@@ -34,8 +34,6 @@ class AuthController extends BaseController {
     let newUser = new User(req.body);
    
     try {
-     
-      
       const savedUser = await newUser.save();
       const token = savedUser.generateToken();
       EmailSender.sendConfirmationMail(firstname,email,token);

@@ -17,7 +17,7 @@ const defaultConfig = {
   port: process.env.PORT || 4567,
   ip: process.env.IP || '0.0.0.0',
   apiPrefix: '/api', // Could be /api/resource or /api/v2/resource
-  userRoles: ['guest', 'user', 'admin'],
+  userRoles: ['customer', 'user', 'admin'],
 
   /**
    * MongoDB configuration options
