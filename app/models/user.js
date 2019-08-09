@@ -64,22 +64,22 @@ UserSchema.set('toJSON', {
   },
 });
 
-// Ensure email has not been taken
+//Ensure email has not been taken
 
-// Validate username is not taken
-// UserSchema
-//   .path('username')
-//   .validate((username, respond) => {
-//     UserModel.findOne({ username })
-//       .then((user) => {
-//         respond(user ? false : true);
-//       })
-//       .catch(() => {
-//         respond(false);
-//       });
-//   }, 'Username already taken.');
+//Validate  is not taken
+UserSchema
+  .path('email')
+  .validate((email, respond) => {
+    UserModel.findOne({ email })
+      .then((user) => {
+        respond(user ? false : true);
+      })
+      .catch(() => {
+        respond(false);
+      });
+  }, 'Username already taken.');
 
-// Validate password field
+//Validate password field
 UserSchema
   .path('password')
   .validate(function(password) {
