@@ -1,5 +1,6 @@
 import path from 'path';
 import merge from 'lodash/merge';
+import 'dotenv'
 
 // Default configuations applied to all environments
 const defaultConfig = {
@@ -45,7 +46,7 @@ const defaultConfig = {
 const environmentConfigs = {
   development: {
     mongo: {
-      uri: process.env.MONGO_URI ||'mongodb://pioneer:emmyboss64@ds159025.mlab.com:59025/pioneer',
+      uri: process.env.MONGO_URI ||'mongodb://localhost/ppeer',
     },
     security: {
       saltRounds: 4,
@@ -68,5 +69,18 @@ const environmentConfigs = {
   },
 };
 
+const paymentConfigs = {
+  currency : (process.env.NODE_ENV === 'production') ? process.env.WCurrency : process.env.TestWCurrency,
+  paymentRequestType : (process.env.NODE_ENV === 'production') ? process.env.WRequestType : process.env.TestWRequestType,
+  paymentSiteReference : (process.env.NODE_ENV === 'production') ? process.env.WSiteReference : process.env.TestWSiteReference,
+  paymentAccountType : (process.env.NODE_ENV === 'production') ? process.env.WAccountType : process.env.TestWAccountType,
+  
+  paymentRefundType : (process.env.NODE_ENV === 'production') ? process.env.WRefundType : process.env.TestWRefundType,
+  paymentRefundAccountType : (process.env.NODE_ENV === 'production') ? process.env.WRefundAccountType : process.env.TestWRefundAccountType,
+
+  paymentUrl : process.env.paymentUrl,
+  paymentUsername : process.env.paymentUsername,
+  paymentPass : process.env.paymentPass
+}
 // Recursively merge configurations
-export default merge(defaultConfig, environmentConfigs[process.env.NODE_ENV] || {});
+export default merge(defaultConfig, paymentConfigs, environmentConfigs[process.env.NODE_ENV] || {});

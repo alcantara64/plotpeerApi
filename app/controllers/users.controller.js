@@ -53,7 +53,7 @@ class UsersController extends BaseController {
         return res.sendStatus(404);
       }
      const projectsCount  = Project.find({User:user._id});
-     const Wallet = Wallet.find({User:user_id});
+    //  const Wallet = Wallet.find({User:user_id});
      return res.sendStatus(404).json(projectsCount);
       
   }catch(err){
@@ -81,11 +81,17 @@ create = async (req, res, next) => {
       ...params,
       provider: 'local',
     });
+
    
     try {
+      
       const savedUser = await newUser.save();
-      const token = savedUser.generateToken();
-     
+      let wallet = new Wallet({ 
+        user: savedUser._id,
+        balance:0
+      });
+      await wallet.save();
+      const token = savedUser.generateToken()
 
       res.status(201).json({ token });
     } catch(err) {

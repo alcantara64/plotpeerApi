@@ -1,5 +1,6 @@
 import BaseController from './base.controller';
 import User from '../models/user';
+import Wallet from '../models/wallet';
 import EmailSender  from '../lib/email';
 import nodemailer from  'nodemailer';
 import crypto from 'crypto';
@@ -37,6 +38,14 @@ class AuthController extends BaseController {
       
       const savedUser = await newUser.save();
       const token = savedUser.generateToken();
+
+      let wallet = new Wallet({ 
+        user: savedUser._id,
+        balance:0
+      });
+      await wallet.save();
+
+      console.log("wallet >> ", wallet)
       EmailSender.sendConfirmationMail(firstname,email,token);
       res.status(201).json({ token });
     } catch(err) {

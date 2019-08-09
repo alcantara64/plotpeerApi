@@ -6,7 +6,6 @@ import AuthController from './controllers/auth.controller';
 import UsersController from './controllers/users.controller';
 import PostsController from './controllers/posts.controller';
 import ProjectController from './controllers/projects.controller';
-import WalletController from './controllers/wallet.controller';
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, './public')
@@ -21,6 +20,7 @@ import authenticate from './middleware/authenticate';
 import accessControl from './middleware/access-control';
 import errorHandler from './middleware/error-handler';
 import walletController from './controllers/wallet.controller';
+import Transaction from './controllers/transaction.controller'
 import kycController from './controllers/kyc.controller';
 
 const routes = new Router();
@@ -44,11 +44,15 @@ routes.get('/users/:username', UsersController._populate, UsersController.fetch)
 routes.post('/users', UsersController.create);
 
 
-//payment related
-routes.get('/users/payment', authenticate, walletController.fetch);
-routes.post('/users/payment', authenticate, walletController.create);
-routes.post('/users/withdraw', authenticate, walletController.withdraw);
+//Wallet Routes
+routes.get('/wallet', authenticate, walletController.getWallet);
+routes.post('/wallet/fund', authenticate, walletController.fundWallet);
+routes.post('/wallet/withdraw', authenticate, walletController.withdraw);
 
+//Wallet transactions
+routes.get('/transactions', authenticate, Transaction.all);
+routes.get('/transactions/user', authenticate, Transaction.self);
+routes.get('/transactions/:id', authenticate, Transaction.one);
 
 // projects
 routes.get('/projects', ProjectController.search);

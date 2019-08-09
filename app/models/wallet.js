@@ -1,28 +1,12 @@
+
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const WalletSchema =  new Schema({
-    _user: { type: Schema.Types.ObjectId, ref: 'User' },
-    balance:{
-        type: Number,
-        required: true,
-        default : 0,
-        min: 0
-    },
-   
-    paymentGateway :{
-        type : String,
-         required: true
-    },
-    reference: {
-        type: String,
-        required:true
-    },
+const Wallet = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'Users', unique : true },
+  balance: { type: Schema.Types.Number, required: true, default: 0 },
+  transactions: [{ type: Schema.Types.ObjectId, ref: 'Transactions' }]
+}, { timestamps: true }, { toObject: { virtuals: true }, toJSON: { virtuals: true } })
 
-},
-{
-    timestamps : true
-});
-
-const WalletModel  = mongoose.model('Wallet', WalletSchema)
+const WalletModel = mongoose.model('Wallet', Wallet);
 export default WalletModel;
