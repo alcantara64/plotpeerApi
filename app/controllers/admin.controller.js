@@ -79,19 +79,17 @@ class AdminController extends BaseController {
       };
 
       //Use your Shufti Pro account client id and secret key
+      console.log("Shufti pro", process.env.SHUFTIPRO_CLIENT_ID)
+      console.log("Shufti pro secret", process.env.SHUFTIPRO_SECRET)
       let token = btoa(`${process.env.SHUFTIPRO_CLIENT_ID}:${process.env.SHUFTIPRO_SECRET}`); //BASIC AUTH TOKEN
-
+      console.log("Shufti pro token", token)
       //Dispatch request via fetch API or with whatever else which best suits for you
-      axios("https://shuftipro.com/api/", {
-        method: "post",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Basic " + token
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(function(response) {
+      axios.post("https://shuftipro.com/api/",payload,{headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Basic " + token
+      },
+      }).then(function(response) {
           return response.json();
         })
         .then(function(data) {
@@ -101,13 +99,13 @@ class AdminController extends BaseController {
         .catch((err)=>{
          
           new Error(err);
-          console.log(err);
+          console.log("Error from the shufti pro",err);
           err.status = 401;
           next(err);
 
         });
     });   
-    console.log(user,"the request got here")
+   
   }
   };
 
@@ -115,23 +113,7 @@ class AdminController extends BaseController {
     convertImgToBase64URL =(file) => {
       console.log(file,"Url of the image");
     return new Promise((resolve, reject) => {
-      // var img = new Image();
-      // img.crossOrigin = "Anonymous";
-      // img.onload = function() {
-      //   var canvas = document.createElement("CANVAS"),
-      //     ctx = canvas.getContext("2d"),
-      //     dataURL;
-      //   canvas.height = img.height;
-      //   canvas.width = img.width;
-      //   ctx.drawImage(img, 0, 0);
-      //   dataURL = canvas.toDataURL("image/jpeg");
-      //   resolve(dataURL);
-      //   canvas = null;
-      // };
-      // img.src = url;
-      // read binary data
     var bitmap = fs.readFileSync(file);
-    // convert binary data to base64 encoded string
     resolve(new Buffer.from(bitmap).toString('base64'));
     reject(err);
     });
@@ -148,6 +130,20 @@ class AdminController extends BaseController {
     }
   }
 
+
+ getPendingKycRequest(req,res,next){
+   try{
+   User.find({kyc_status:'pending'},(error,doc)=>{
+     if(error){
+       next(error)
+     }else{
+       return res.json(doc)
+     }
+   })
+  }catch(err){
+    next(err)
+  }
+ }
   
 
 

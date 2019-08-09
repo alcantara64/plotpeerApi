@@ -26,7 +26,7 @@ class KycController extends BaseController {
   getPenndingRequest = async (req, res, next) => {
     try {
       // @TODO Add pagination
-      res.json(await User.find({ kyc_status: null }));
+      res.json(await User.find({ kyc_status: 'pending' }));
     } catch (err) {
       next(err);
     }
@@ -56,20 +56,21 @@ class KycController extends BaseController {
   };
 
   create = async (req, res, next) => {
-    if (req.file) {
+    const {file} = req;
+    const {mimetype,path} = file;
+    if (file) {
       const user = req.user || req.currentUser;
       const id = user._id;
-      //const allowedExtentions = ['png','jpg','jpeg']
+      const allowedExtentions = ['png','jpg','jpeg']
 
-      // if(!allowedExtentions.includes(req.file.mimetype)){
-      // res.status(400).json({error:'unsupported type'});
-      // return
-      // }
+      if(!allowedExtentions.includes(mimetype)){
+        return res.status(400).json({error:'unsupported type'});
+      }
 
       try {
         const savedUser = await User.findByIdAndUpdate(id, {
-          kyc_status: 2,
-          kycImage: req.file.path
+          kyc_status: 'pending',
+          kycImage: path
         });
 
         res.status(201).json({ savedUser });

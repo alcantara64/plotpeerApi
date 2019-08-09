@@ -72,8 +72,9 @@ routes.delete('/posts/:id', authenticate, PostsController.delete);
 routes.get('/admin', accessControl('admin'), MetaController.index);
 routes.get('/admin/users', accessControl('customer'), Admincontroller.users);
 routes.get('/admin/user/:id',accessControl('customer'), Admincontroller.user);
-routes.put('/admin/kyc',accessControl('customer'), Admincontroller.updateKycRequest);
+routes.put('/admin/kyc',authenticate, Admincontroller.updateKycRequest);
 routes.get('/admin/kyc/:id', Admincontroller.shuptiproverifcation);
+routes.get('/admin/kyc', authenticate,Admincontroller.getPendingKycRequest);
 
 routes.use(errorHandler);
 
