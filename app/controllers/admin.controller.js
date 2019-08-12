@@ -4,6 +4,7 @@ import axios from 'axios';
 import BaseController from "./base.controller";
 import User from "../models/user";
 import  fs from 'fs';
+import appRoot from 'app-root-path';
 
 class AdminController extends BaseController {
   whitelist = [
@@ -64,7 +65,7 @@ class AdminController extends BaseController {
   }
 
     //get document sample proof base64
-    this.convertImgToBase64URL(`./public/image.png`)
+    this.convertImgToBase64URL(`${appRoot}/public/new.jpg`)
     .then(response => {
       //Use this key if you want to perform document verification
       payload["document"] = {
@@ -84,28 +85,30 @@ class AdminController extends BaseController {
       let token = btoa(`${process.env.SHUFTIPRO_CLIENT_ID}:${process.env.SHUFTIPRO_SECRET}`); //BASIC AUTH TOKEN
       console.log("Shufti pro token", token)
       //Dispatch request via fetch API or with whatever else which best suits for you
-      axios.post("https://shuftipro.com/api/",payload,{headers: {
-        Accept: "application/json",
+      axios.post("https://shuftipro.com/api/",payload,{
+        headers: {
+        "Accept": "application/json",
         "Content-Type": "application/json",
-        Authorization: "Basic " + token
+        "Authorization": "Basic " + token
       },
       }).then(function(response) {
+        //console.log('response',response)
           return response.json();
         })
         .then(function(data) {
-          console.log(data);
+          //console.log(data);
           return data;
         })
         .catch((err)=>{
-         
+
           new Error(err);
-          console.log("Error from the shufti pro",err);
-          err.status = 401;
+          console.log("Error from the shufti pro",err.data);
+
           next(err);
 
         });
-    });   
-   
+    });
+
   }
   };
 
@@ -123,7 +126,7 @@ class AdminController extends BaseController {
       const {id} = req.params;
       try{
       if(id){
-        User.findByIdAndDelete(id)  
+        User.findByIdAndDelete(id)
       }
     }catch(err){
         return res.json(err);
@@ -144,13 +147,13 @@ class AdminController extends BaseController {
     next(err)
   }
  }
-  
 
 
 
 
 
-  
+
+
 }
 
 export default new AdminController();

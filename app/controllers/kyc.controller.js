@@ -32,28 +32,7 @@ class KycController extends BaseController {
     }
   };
 
-  dashboard = async (req, res, next) => {
-    try {
-      const user = req.user || req.currentUser;
-      if (!user) {
-        return res.sendStatus(404);
-      }
-      const projectsCount = Project.find({ User: user._id });
-      const Wallet = Wallet.find({ User: user_id });
-      return res.sendStatus(404).json(projectsCount);
-    } catch (err) {
-      next();
-    }
-  };
 
-  fetch = (req, res) => {
-    const user = req.user || req.currentUser;
-    if (!user) {
-      return res.sendStatus(404);
-    }
-
-    res.json(user);
-  };
 
   create = async (req, res, next) => {
     const {file} = req;
@@ -62,10 +41,11 @@ class KycController extends BaseController {
       const user = req.user || req.currentUser;
       const id = user._id;
       const allowedExtentions = ['png','jpg','jpeg']
-
-      if(!allowedExtentions.includes(mimetype)){
-        return res.status(400).json({error:'unsupported type'});
-      }
+   console.log("File",file);
+   console.log("Memes", req);
+      // if(!allowedExtentions.includes(mimetype)){
+      //   return res.status(400).json({error:'unsupported type'});
+      // }
 
       try {
         const savedUser = await User.findByIdAndUpdate(id, {
@@ -106,7 +86,7 @@ class KycController extends BaseController {
     }
   };
 
-  
+
 }
 
 export default new KycController();

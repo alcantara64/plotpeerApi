@@ -1,6 +1,13 @@
 import { Router } from 'express';
 
-
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/uploads')
+  },
+  filename:  (req, file, cb) => {
+    cb(null,    Date.now() + '-'+ file.originalname )
+  }
+})
 import MetaController from './controllers/meta.controller';
 import AuthController from './controllers/auth.controller';
 import UsersController from './controllers/users.controller';
@@ -17,14 +24,7 @@ import walletController from './controllers/wallet.controller';
 import Transaction from './controllers/transaction.controller'
 import kycController from './controllers/kyc.controller';
 
-let storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './public')
-  },
-  filename:  (req, file, cb) => {
-    cb(null,    Date.now() + '-'+ file.originalname )
-  }
-})
+
 
 const routes = new Router();
 
