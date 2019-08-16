@@ -71,7 +71,6 @@ class WalletController extends BaseController {
             const paymentResponse = await paymentProcessor.callStapi(paymentRequestBody, "POST")
             const responseBody = paymentResponse.data
 
-            console.log("responseBody >> ", responseBody)
 
             paymentProcessor.handleStapiErrors(res, responseBody)
 
@@ -81,13 +80,13 @@ class WalletController extends BaseController {
             transaction.orderRef = responseBody.response[0].orderreference
             transaction.amount = paymentRequestBody[0].baseamount
             transaction.type = Transaction.Type.FUND
-            transaction.status = (responseBody.response[0].settlestatus == "0" || responseBody.response[0].settlestatus == "1" || responseBody.response[0].settlestatus == "10")? Transaction.Status.PENDING : (responseBody.response[0].settlestatus == "100") ? Transaction.Status.SETTLED : (responseBody.response[0].settlestatus == "2") ? Transaction.Status.SUSPENDED : Transaction.Status.TERMINATED
+            transaction.status = (responseBody.response[0].settlestatus == "0" || responseBody.response[0].settlestatus == "1" || responseBody.response[0].settlestatus == "10" || responseBody.response[0].settlestatus == "100")? Transaction.Status.SETTLED : (responseBody.response[0].settlestatus == "2") ? Transaction.Status.PENDING : Transaction.Status.TERMINATED
             await transaction.save()
 
             if (responseBody.response[0].baseamount != paymentRequestBody[0].baseamount) { 
                 return res.status(HttpStatus.BAD_REQUEST).json({ 
                     ok: false,
-                    message: 'Fund amount entered is different from actual debit amount',
+                    message: 'Fund amount does not match actual debit amount',
                     error: "Incomplete Funding",
                     data: {
                         amount : paymentRequestBody[0].baseamount,
