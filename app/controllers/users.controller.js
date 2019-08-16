@@ -12,10 +12,9 @@ class UsersController extends BaseController {
     'password',
     'aml',
     'kyc',
-    
+
   ];
 
-  
 
   _populate = async (req, res, next) => {
     const { username } = req.params;
@@ -45,35 +44,34 @@ class UsersController extends BaseController {
     }
   }
 
-  
+
   fetch = (req, res) => {
     const user = req.user || req.currentUser;
     if (!user) {
       return res.sendStatus(404);
     }
-    
+
     res.json(user);
   }
 
 create = async (req, res, next) => {
     const params = this.filterParams(req.body, this.whitelist);
   const email = req.body.email;
-  
+
     let newUser = new User({
       ...params,
       provider: 'local',
     });
 
-   
+
     try {
-      
       const savedUser = await newUser.save();
-      let wallet = new Wallet({ 
+      let wallet = new Wallet({
         user: savedUser._id,
-        balance:0
+        balance: 0,
       });
       await wallet.save();
-      const token = savedUser.generateToken()
+      const token = savedUser.generateToken();
 
       res.status(201).json({ token });
     } catch(err) {
@@ -81,12 +79,12 @@ create = async (req, res, next) => {
       next(err);
     }
   }
-  
+
   update = async (req, res, next) => {
     const newAttributes = this.filterParams(req.body, this.whitelist);
     const updatedUser = Object.assign({}, req.currentUser, newAttributes);
-    User.findByIdAndUpdate(req.currentUser._id,newAttributes,(err,doc)=>{
-      if(err){
+    User.findByIdAndUpdate(req.currentUser._id, updatedUser, (err, doc)=>{
+      if(err) {
         next(err);
       }
       try {
@@ -94,11 +92,9 @@ create = async (req, res, next) => {
       } catch (err) {
         next(err);
       }
-    })
-    
+    });
   }
 
-  
 
   delete = async (req, res, next) => {
     if (!req.currentUser) {

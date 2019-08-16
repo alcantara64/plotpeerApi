@@ -54,8 +54,8 @@ class ProjectController extends BaseController {
    */
 
   create = async (req, res, next) => {
-    const params =  req.body;//this.filterParams(req.body, this.whitelist);
-console.log( req.currentUser._id)
+    const params = req.body;// this.filterParams(req.body, this.whitelist);
+
     const project = new Project({
       ...params,
       investors: req.currentUser._id,

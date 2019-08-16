@@ -60,11 +60,7 @@ routes.get('/transactions/:id', authenticate, Transaction.one);
 // projects
 routes.get('/projects', ProjectController.search);
 routes.post('/projects', authenticate, ProjectController.create);
-routes.get(
-  '/projects/:id',
-  ProjectController._populate,
-  ProjectController.fetch
-);
+routes.get( '/projects/:id', ProjectController.fetch);
 routes.delete('/projects/:id', authenticate, ProjectController.delete);
 
 // kyc
@@ -85,8 +81,15 @@ routes.get('/admin', accessControl('admin'), MetaController.index);
 routes.get('/admin/users', accessControl('customer'), Admincontroller.users);
 routes.get('/admin/user/:id', accessControl('customer'), Admincontroller.user);
 routes.put('/admin/kyc', authenticate, Admincontroller.updateKycRequest);
-routes.get('/admin/kyc/:id', Admincontroller.shuptiproverifcation);
+routes.get('/admin/kyc/:id', Admincontroller.shuftiproRequest);
+routes.get('/admin/shufti/notify', Admincontroller.shuftiproVerifcation);
 routes.get('/admin/kyc', authenticate, Admincontroller.getPendingKycRequest);
+
+routes.get('/admin/project', authenticate, Admincontroller.getprojects);
+routes.post('/admin/project', authenticate, Admincontroller.createProject);
+routes.put('/admin/project', authenticate, Admincontroller.updateProject);
+routes.delete('/admin/project/:id', authenticate, Admincontroller.deleteProject);
+
 
 routes.use(errorHandler);
 
