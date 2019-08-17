@@ -86,7 +86,7 @@ routes.get('/admin/shufti/notify', Admincontroller.shuftiproVerifcation);
 routes.get('/admin/kyc', authenticate, Admincontroller.getPendingKycRequest);
 
 routes.get('/admin/project', authenticate, Admincontroller.getprojects);
-routes.post('/admin/project', authenticate, Admincontroller.createProject);
+routes.post('/admin/project', [authenticate, upload.array('images', 10)], Admincontroller.createProject);
 routes.put('/admin/project', authenticate, Admincontroller.updateProject);
 routes.delete('/admin/project/:id', authenticate, Admincontroller.deleteProject);
 

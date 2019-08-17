@@ -1,8 +1,8 @@
-import BaseController from "./base.controller";
-import User from "../models/user";
+import BaseController from './base.controller';
+import User from '../models/user';
 
 class KycController extends BaseController {
-  whitelist = ["firstname", "lastname", "email", "password", "aml", "kyc"];
+  whitelist = ['firstname', 'lastname', 'email', 'password', 'aml', 'kyc'];
 
   _populate = async (req, res, next) => {
     const { username } = req.params;
@@ -11,7 +11,7 @@ class KycController extends BaseController {
       const user = await User.findOne({ username });
 
       if (!user) {
-        const err = new Error("User not found.");
+        const err = new Error('User not found.');
         err.status = 404;
         return next(err);
       }
@@ -33,16 +33,14 @@ class KycController extends BaseController {
   };
 
 
-
   create = async (req, res, next) => {
-    const {file} = req;
-    const {mimetype,path} = file;
+    const { file } = req;
+    const { mimetype, path } = file;
     if (file) {
       const user = req.user || req.currentUser;
       const id = user._id;
-      const allowedExtentions = ['png','jpg','jpeg']
-   console.log("File",file);
-   console.log("Memes", req);
+      const allowedExtentions = ['png', 'jpg', 'jpeg'];
+
       // if(!allowedExtentions.includes(mimetype)){
       //   return res.status(400).json({error:'unsupported type'});
       // }
@@ -50,7 +48,7 @@ class KycController extends BaseController {
       try {
         const savedUser = await User.findByIdAndUpdate(id, {
           kyc_status: 'pending',
-          kycImage: path
+          kycImage: path,
         });
 
         res.status(201).json({ savedUser });
@@ -62,10 +60,9 @@ class KycController extends BaseController {
   };
 
   update = async (req, res, next) => {
-    //const newAttributes = this.filterParams(req.body, this.whitelist);
-    //const updatedUser = Object.assign({}, req.currentUser, newAttributes);
-    console.log(req.file);
-    return;
+     const newAttributes = this.filterParams(req.body, this.whitelist);
+     const updatedUser = Object.assign({}, req.currentUser, newAttributes);
+  
     try {
       res.status(200).json(await updatedUser.save());
     } catch (err) {

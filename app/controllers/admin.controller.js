@@ -151,10 +151,16 @@ class AdminController extends BaseController {
 
  // #region project
  createProject = async (req, res, next) => {
+   const { files } = req;
   const params = req.body;// this.filterParams(req.body, this.whitelist);
-console.log("params", params)
+  let paths = [];
+files.forEach(file => {
+  paths.push(file.path);
+});
+console.log('params', paths);
   const project = new Project({
     ...params,
+    images: paths,
   });
 
   try {
@@ -198,7 +204,7 @@ deleteProject = async (req, res, next) => {
     return res.sendStatus(403);
   }
   try {
-    await Project.findByIdAndRemove(id)
+    await Project.findByIdAndRemove(id);
     res.sendStatus(204);
   } catch(err) {
     next(err);
