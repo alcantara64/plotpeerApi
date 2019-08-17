@@ -8,8 +8,8 @@ import Constants from '../config/constants';
 const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   firstname: String,
-  lastname : String,
-  email: { 
+  lastname: String,
+  email: {
     type: String,
     unique: true,
     lowercase: true,
@@ -21,30 +21,30 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['developer', 'customer','admin'],
+    enum: ['developer', 'customer', 'admin'],
     default: 'customer',
   },
-  comfirmStatus:{
-    type:Boolean,
-    default:false
+  comfirmStatus: {
+    type: Boolean,
+    default: false,
   },
-  emailComfirmToken : String,
+  emailComfirmToken: String,
   address: String,
      city: String,
      phone: String,
      state: String,
      country: String,
      dob: String,
-     kycImage:String,
+     kycImage: String,
      aml_status: {
       type: Number,
       enum: [0, 1],
       default: 0,
             },
         kyc_status: {
-          type: Number,
-          enum: [0, 1,2,3],
-          default: 3,
+          type: String,
+          enum: [null, 'pending', 'approved', 'rejected'],
+          default: null,
             },
 },
 
@@ -66,18 +66,18 @@ UserSchema.set('toJSON', {
 
 // Ensure email has not been taken
 
-// Validate username is not taken
-// UserSchema
-//   .path('username')
-//   .validate((username, respond) => {
-//     UserModel.findOne({ username })
-//       .then((user) => {
-//         respond(user ? false : true);
-//       })
-//       .catch(() => {
-//         respond(false);
-//       });
-//   }, 'Username already taken.');
+// Validate  is not taken
+UserSchema
+  .path('email')
+  .validate((email, respond) => {
+    UserModel.findOne({ email })
+      .then((user) => {
+        respond(user ? false : true);
+      })
+      .catch(() => {
+        respond(false);
+      });
+  }, 'Username already taken.');
 
 // Validate password field
 UserSchema
@@ -141,18 +141,18 @@ UserSchema.methods = {
   _hashPassword(password, saltRounds = Constants.security.saltRounds, callback) {
     return bcrypt.hash(password, saltRounds, callback);
   },
-  generateComfirmationUrlToken(){
+  generateComfirmationUrlToken() {
     return jwt.sign(
-      { 
-        _id: this._id ,
-        email:this.email,
-        comfirmStatus:true
-      }, 
+      {
+        _id: this._id,
+        email: this.email,
+        comfirmStatus: true,
+      },
       Constants.security.sessionSecret, {
       expiresIn: Constants.security.sessionExpiration,
     });
   },
-  setComfirmationToken(){
+  setComfirmationToken() {
     this.emailComfirmToken = this.generateComfirmationUrlToken;
   },
    getConfirmationUrl() {
@@ -161,13 +161,13 @@ UserSchema.methods = {
    getForgotPasswordToken() {
     return jwt.sign(
       {
-        _id: this._id
+        _id: this._id,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: '1h' }
     );
   },
-  
+
 };
 
 const UserModel = mongoose.model('Users', UserSchema);

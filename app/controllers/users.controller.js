@@ -1,7 +1,5 @@
 import BaseController from './base.controller';
 import User from '../models/user';
-import Project from '../models/project';
-import Wallet from '../models/wallet';
 
 
 class UsersController extends BaseController {
@@ -13,10 +11,10 @@ class UsersController extends BaseController {
     'phone',
     'password',
     'aml',
-    'kyc'
+    'kyc',
+
   ];
 
-  
 
   _populate = async (req, res, next) => {
     const { username } = req.params;
@@ -46,52 +44,34 @@ class UsersController extends BaseController {
     }
   }
 
-  dashboard = async (req,res,next) => {
-    try {
-      const user = req.user || req.currentUser;
-      if(!user){
-        return res.sendStatus(404);
-      }
-     const projectsCount  = Project.find({User:user._id});
-    //  const Wallet = Wallet.find({User:user_id});
-     return res.sendStatus(404).json(projectsCount);
-      
-  }catch(err){
-    next()
-  }
-
-  
-  }
-
 
   fetch = (req, res) => {
     const user = req.user || req.currentUser;
     if (!user) {
       return res.sendStatus(404);
     }
-    
+
     res.json(user);
   }
 
 create = async (req, res, next) => {
     const params = this.filterParams(req.body, this.whitelist);
   const email = req.body.email;
-  
+
     let newUser = new User({
       ...params,
       provider: 'local',
     });
 
-   
+
     try {
-      
       const savedUser = await newUser.save();
-      let wallet = new Wallet({ 
+      let wallet = new Wallet({
         user: savedUser._id,
-        balance:0
+        balance: 0,
       });
       await wallet.save();
-      const token = savedUser.generateToken()
+      const token = savedUser.generateToken();
 
       res.status(201).json({ token });
     } catch(err) {
@@ -99,25 +79,27 @@ create = async (req, res, next) => {
       next(err);
     }
   }
-  
+
   update = async (req, res, next) => {
     const newAttributes = this.filterParams(req.body, this.whitelist);
     const updatedUser = Object.assign({}, req.currentUser, newAttributes);
-   
-    try {
-      res.status(200).json(await updatedUser.save());
-    } catch (err) {
-      next(err);
-    }
+    User.findByIdAndUpdate(req.currentUser._id, updatedUser, (err, doc)=>{
+      if(err) {
+        next(err);
+      }
+      try {
+        res.status(200).json(doc.save);
+      } catch (err) {
+        next(err);
+      }
+    });
   }
 
-  
 
   delete = async (req, res, next) => {
     if (!req.currentUser) {
       return res.sendStatus(403);
     }
-
     try {
       await req.currentUser.remove();
       res.sendStatus(204);

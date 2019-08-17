@@ -32,19 +32,19 @@ const ProjectSchema = new Schema({
             type: String,
             required: true,
      },
-     project_type: {
+     projectType: {
         type: String,
         required: true,
  },
- project_yied: {
+ projectYied: {
     type: Number,
     required: true,
 },
-project_term: {
+projectTerm: {
     type: String,
     required: true,
 },
-min_amount: {
+minAmount: {
   type: Number,
   required: true,
 },
@@ -56,10 +56,6 @@ amountFunded: {
 investmentRequired: {
   type: Number,
   required: true,
-},
-currentInvestors: {
-  type: Number,
-
 },
 marketInfo: {
   type: String,
@@ -79,10 +75,10 @@ riskMitigation: {
   type: String,
 
 },
-images: {
+images: [{
   type: String,
   required: true,
-},
+}],
 video: {
   type: String,
 },

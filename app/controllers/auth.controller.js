@@ -16,6 +16,7 @@ class AuthController extends BaseController {
       if (!user || !user.authenticate(password)) {
         const err = new Error('Please verify your credentials.');
         err.status = 401;
+        err.message = 'invalid credentials'
         return next(err);
       }
 
@@ -34,8 +35,6 @@ class AuthController extends BaseController {
     let newUser = new User(req.body);
    
     try {
-     
-      
       const savedUser = await newUser.save();
       const token = savedUser.generateToken();
 

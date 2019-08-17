@@ -3,20 +3,21 @@ import User from '../models/user';
 import Constants from '../config/constants';
 
 const { sessionSecret } = Constants.security;
-console.log(sessionSecret);
 export default function authenticate(req, res, next) {
   const { authorization } = req.headers;
+  console.log('authorization', authorization);
   if(!authorization){
     return   res.sendStatus(401);
   }
   let Bearer = authorization.split(' ');
   const token =Bearer[1];
+  console.log("token", token);
   jwt.verify(token, sessionSecret, async (err, decoded) => {
     if (err) {
       console.error(err)
       return res.sendStatus(401);
     }
-   
+
     // If token is decoded successfully, find user and attach to our request
     // for use in our route or other middleware
     try {
@@ -29,7 +30,7 @@ export default function authenticate(req, res, next) {
       next();
     } catch(err) {
       next(err);
-     
+
     }
   });
 }
