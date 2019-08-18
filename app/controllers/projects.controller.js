@@ -8,7 +8,7 @@ class ProjectController extends BaseController {
     'email',
   ];
 
-   // Middleware to populate post based on url param
+   // Middleware to populate project based on url param
   _populate = async (req, res, next) => {
     const { id } = req.params;
 
@@ -33,7 +33,7 @@ class ProjectController extends BaseController {
     try {
       const project =
         await Project.find({})
-                  .populate({ path: '_user', select: '-projets -role' });
+                  .populate({ path: '_user', select: '-projects -role' });
 
       res.json( project);
     } catch(err) {
@@ -47,6 +47,16 @@ class ProjectController extends BaseController {
 
   fetch = (req, res) => {
     res.json(req.project);
+  }
+
+  getProject = (req, res, next) => {
+    const { id } = req.params;
+    Project.findById(id, (err, doc)=>{
+      if(err) {
+        new Error('Project not fiund');
+      }
+     return res.json(doc);
+    });
   }
 
   /**

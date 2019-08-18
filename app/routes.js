@@ -60,7 +60,7 @@ routes.get('/transactions/:id', authenticate, Transaction.one);
 // projects
 routes.get('/projects', ProjectController.search);
 routes.post('/projects', authenticate, ProjectController.create);
-routes.get( '/projects/:id', ProjectController.fetch);
+routes.get( '/projects/:id', ProjectController.getProject);
 routes.delete('/projects/:id', authenticate, ProjectController.delete);
 
 // kyc
