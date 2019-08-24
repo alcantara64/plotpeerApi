@@ -1,70 +1,69 @@
 import BaseController from './base.controller';
 import User from '../models/user';
 import Wallet from '../models/wallet';
-import EmailSender  from '../lib/email';
-import nodemailer from  'nodemailer';
+import EmailSender from '../lib/email';
+import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import async from 'async';
 
 class AuthController extends BaseController {
-  whitelist = ['email','password','fullname']
+  whitelist = ['email', 'password', 'fullname']
   login = async (req, res, next) => {
     const { email, password } = req.body;
     try {
       const user = await User.findOne({ email });
- 
+
       if (!user || !user.authenticate(password)) {
         const err = new Error('Please verify your credentials.');
         err.status = 401;
-        err.message = 'invalid credentials'
+        err.message = 'invalid credentials';
         return next(err);
       }
 
       const token = user.generateToken();
       const userId = user._id;
-      return res.status(200).json({ token,userId});
+      return res.status(200).json({ token, userId });
     } catch (err) {
       next(err);
     }
   }
   create = async (req, res, next) => {
     const params = this.filterParams(req.body, this.whitelist);
-   
-  const {firstname, lastname,email} =  req.body 
+
+  const { firstname, email } = req.body;
 
     let newUser = new User(req.body);
-   
+
     try {
       const savedUser = await newUser.save();
       const token = savedUser.generateToken();
 
-      let wallet = new Wallet({ 
+      let wallet = new Wallet({
         user: savedUser._id,
-        balance:0
+        balance: 0,
       });
       await wallet.save();
 
-      console.log("wallet >> ", wallet)
-      EmailSender.sendConfirmationMail(firstname,email,token);
+      console.log('wallet >> ', wallet);
+      EmailSender.sendConfirmationMail(firstname, email, token);
       res.status(201).json({ token });
     } catch(err) {
       err.status = 400;
-     console.error(err)
+     console.error(err);
       next(err);
     }
   }
 
 
   forgotPassword = async (req, res, next) => {
-    console.log(req.body.email)
+    console.log(req.body.email);
     async.waterfall([
       function(done) {
         User.findOne({
-          email: req.body.email
+          email: req.body.email,
         }).exec((err, user) => {
           console.log(user);
           if (user) {
-           
             done(err, user);
           } else {
             done('User not found.');
@@ -84,10 +83,9 @@ class AuthController extends BaseController {
         });
       },
       function(token, user, done) {
-
-        EmailSender.resetLink(user.email,user.firstname,token)
-        res.status(200).json({ message: 'sent' })
-      }
+        EmailSender.resetLink(user.email, user.firstname, token);
+        res.status(200).json({ message: 'sent' });
+      },
     ], function(err) {
       return res.status(422).json({ message: err });
     });
@@ -96,8 +94,8 @@ class AuthController extends BaseController {
     User.findOne({
       reset_password_token: req.body.token,
       reset_password_expires: {
-        $gt: Date.now()
-      }
+        $gt: Date.now(),
+      },
     }).exec(function(err, user) {
       if (!err && user) {
         if (req.body.newPassword === req.body.verifyPassword) {
@@ -107,19 +105,19 @@ class AuthController extends BaseController {
           user.save(function(err) {
             if (err) {
               return res.status(422).send({
-                message: err
+                message: err,
               });
             } else {
-              var data = {
+              let data = {
                 to: user.email,
                 from: email,
                 template: 'reset-password-email',
                 subject: 'Password Reset Confirmation',
                 context: {
                   name: user.lastname,
-                }
+                },
               };
-  
+
               nodemailer.smtpTransport.sendMail(data, function(err) {
                 if (!err) {
                   return res.json({ message: 'Password reset' });
@@ -131,16 +129,16 @@ class AuthController extends BaseController {
           });
         } else {
           return res.status(422).send({
-            message: 'Passwords do not match'
+            message: 'Passwords do not match',
           });
         }
       } else {
         return res.status(400).send({
-          message: 'Password reset token is invalid or has expired.'
+          message: 'Password reset token is invalid or has expired.',
         });
       }
     });
-
 }
+
 }
 export default new AuthController();

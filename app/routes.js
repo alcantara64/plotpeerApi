@@ -34,6 +34,7 @@ routes.post('/auth/login', AuthController.login);
 routes.post('/auth/forgotpassword', AuthController.forgotPassword);
 routes.get('/auth/resetpassword/:token', AuthController.resetPassword);
 routes.post('/auth/register', AuthController.create);
+//routes.get('/auth/comfirm-mail/:token', AuthController.)
 
 // Users
 // routes.get('/user/dashboard',authenticate, UsersController.dashboard);
