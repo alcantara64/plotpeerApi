@@ -14,6 +14,7 @@ import UsersController from './controllers/users.controller';
 import PostsController from './controllers/posts.controller';
 import ProjectController from './controllers/projects.controller';
 import Admincontroller from './controllers/admin.controller';
+import MessageController from './controllers/message.controller';
 
 import multer from 'multer';
 const upload = multer({ storage: storage });
@@ -69,6 +70,11 @@ routes.post(
   [authenticate, upload.single('file')],
   kycController.create
 );
+
+routes.get('/messages', authenticate, MessageController.getMessages);
+routes.get('/message:id', authenticate, MessageController.getMessage);
+routes.post('/message', authenticate, MessageController.create);
+routes.put('/message', authenticate, MessageController.update);
 
 // Post
 routes.get('/posts', PostsController.search);
