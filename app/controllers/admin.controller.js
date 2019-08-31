@@ -38,15 +38,14 @@ class AdminController extends BaseController {
   }
 
   updateKycRequest = (req, res, next) => {
-      const { status, id } = req.body;
+      const { payload, id } = req.body;
       try{
-     User.findByIdAndUpdate(id, {
-         kyc_status: status,
-     }, {}, (err, doc)=>{
+     User.findByIdAndUpdate(id, payload, (err, doc)=>{
          if(err) {
            return res.sendStatus(400);
          }
-         return doc;
+        console.log("id",payload)
+         res.sendStatus(201);
      });
       }catch(err) {
         next(err);

@@ -147,16 +147,17 @@ UserSchema.methods = {
         _id: this._id,
         email: this.email,
         comfirmStatus: true,
+
       },
       Constants.security.sessionSecret, {
-      expiresIn: Constants.security.sessionExpiration,
+      expiresIn: '24h',
     });
   },
   setComfirmationToken() {
-    this.emailComfirmToken = this.generateComfirmationUrlToken;
+    this.emailComfirmToken = this.generateComfirmationUrlToken();
   },
    getConfirmationUrl() {
-    return `${process.env.HOST}/confirmation/${this.generateToken()}`;
+    return `${process.env.HOST}/confirmation/${this.generateComfirmationUrlToken()}`;
   },
    getForgotPasswordToken() {
     return jwt.sign(

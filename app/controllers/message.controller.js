@@ -1,6 +1,9 @@
 import BaseController from './base.controller';
 
 import Message from '../models/message';
+import EmailSender from '../lib/email';
+import { request } from 'http';
+import { brotliCompressSync } from 'zlib';
 
 class MessageController extends BaseController {
 
@@ -10,7 +13,6 @@ class MessageController extends BaseController {
 
 
   getMessages = async (req, res, next) => {
-
     try {
     const userId = req.currentUser._id;
         console.log('User', userId);
@@ -45,8 +47,8 @@ class MessageController extends BaseController {
       ...params,
       user: req.currentUser._id,
     });
-
     try {
+    await EmailSender.messaging('emmm@brotliCompressSync.com', 'emmanuelagahiu@gmail.com', params.subject, params.body);
       res.status(201).json(await message.save());
     } catch(err) {
       next(err);

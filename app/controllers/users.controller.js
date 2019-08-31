@@ -82,17 +82,16 @@ create = async (req, res, next) => {
 
   update = async (req, res, next) => {
     const newAttributes = this.filterParams(req.body, this.whitelist);
-    const updatedUser = Object.assign({}, req.currentUser, newAttributes);
-    User.findByIdAndUpdate(req.currentUser._id, updatedUser, (err, doc)=>{
+    try {
+    User.findByIdAndUpdate(req.currentUser._id, newAttributes, (err, doc)=>{
       if(err) {
-        next(err);
-      }
-      try {
-        res.status(200).json(doc.save);
-      } catch (err) {
-        next(err);
-      }
+        throw new Error(err);
+      }  
+        res.status(200).json(doc);
     });
+  } catch (err) {
+    next(err);
+  }
   }
 
 
