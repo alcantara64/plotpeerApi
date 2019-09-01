@@ -44,7 +44,6 @@ class AdminController extends BaseController {
          if(err) {
            return res.sendStatus(400);
          }
-        console.log("id",payload)
          res.sendStatus(201);
      });
       }catch(err) {
