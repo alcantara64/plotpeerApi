@@ -69,7 +69,7 @@ UserSchema.set('toJSON', {
 // Validate  is not taken
 UserSchema
   .path('email')
-  .validate((email, respond) => {
+  .validate(function(email, respond) {
     UserModel.findOne({ email })
       .then((user) => {
         respond(user ? false : true);
