@@ -34,6 +34,7 @@ routes.post('/auth/login', AuthController.login);
 routes.post('/auth/forgotpassword', AuthController.forgotPassword);
 routes.get('/auth/resetpassword/:token', AuthController.resetPassword);
 routes.post('/auth/register', AuthController.create);
+routes.post('/auth/changePassword', authenticate, AuthController.changePassword);
 //routes.get('/auth/comfirm-mail/:token', AuthController.)
 
 // Users
@@ -42,11 +43,7 @@ routes.get('/users', UsersController.search);
 routes.get('/users/me', authenticate, UsersController.fetch);
 routes.put('/users/me', authenticate, UsersController.update);
 routes.delete('/users/me', authenticate, UsersController.delete);
-routes.get(
-  '/users/:username',
-  UsersController._populate,
-  UsersController.fetch
-);
+routes.get( '/users/:username', UsersController._populate, UsersController.fetch);
 routes.post('/users', UsersController.create);
 
 // Wallet Routes

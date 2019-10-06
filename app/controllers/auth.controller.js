@@ -9,6 +9,7 @@ import crypto from 'crypto';
 import Constants from '../config/constants';
 import bcrypt from 'bcrypt';
 import async from 'async';
+import constants from '../config/constants';
 
 class AuthController extends BaseController {
   whitelist = ['email', 'password', 'firstname', 'lastname', 'phone'];
@@ -54,7 +55,36 @@ class AuthController extends BaseController {
       next(err);
     }
   }
-
+changePassword = async(req, res, next) =>{
+  const { oldPassword, newPassword, comfirmNewPassword } = req.body;
+   const id = req.currentUser._id;
+   console.log(newPassword, comfirmNewPassword);
+   if( newPassword === comfirmNewPassword ) {
+    try {
+   const user = await User.findOne(id);
+   if(!user.authenticate(oldPassword)) {
+    let err = new Error('Invalid Old password.');
+    err.message = 'Invalid Old password.';
+    return next(err);
+   }
+   console.log('is Authenticated', user.authenticate(oldPassword));
+  const encrypytedPassword = await user._hashPassword( newPassword, Constants.security.saltRounds);
+   console.log('Password', encrypytedPassword);
+   User.findByIdAndUpdate(id, { password: encrypytedPassword }, (err, response)=>{
+     if(!err) {
+     return res.status(201).json();
+     }
+     return next(err);
+   });
+    }catch(err){
+     new Error(err);
+     next(err);
+    }
+   }else{
+     const err = new Error('comfirm password must be the same with new password');
+     next(err);
+   }
+}
 
   forgotPassword = async (req, res, next) => {
     console.log(req.body.email);
