@@ -2,18 +2,18 @@ import mongoose from 'mongoose';
 import Constants from './config/constants';
 
 // Use native promises
-//mongoose.Promise = global.Promise;
+// mongoose.Promise = global.Promise;
 
 // Connect to our mongo database;
-//mongoose.connect(Constants.mongo.uri);
-//mongoose.connection.on('error', (err) => {
+// mongoose.connect(Constants.mongo.uri);
+// mongoose.connection.on('error', (err) => {
  // throw err;
-//});
+// });
  const options = {
- 
-  useNewUrlParser: false,
-  //useCreateIndex: true,
-  //useFindAndModify: false,
+
+  useNewUrlParser: true,
+  // useCreateIndex: true,
+  // useFindAndModify: false,
   autoIndex: false, // Don't build indexes
   reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
   reconnectInterval: 500, // Reconnect every 500ms
@@ -22,7 +22,7 @@ import Constants from './config/constants';
   bufferMaxEntries: 0,
   connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-  family: 4 // Use IPv4, skip trying IPv6
+  family: 4, // Use IPv4, skip trying IPv6
 };
 mongoose.Promise = global.Promise;
 const db = mongoose.connect(Constants.mongo.uri, options, (err) => {
@@ -30,5 +30,5 @@ const db = mongoose.connect(Constants.mongo.uri, options, (err) => {
     console.error(err);
     return;
   }
-  console.log("Connected to database sucessfully");
+  console.log('Connected to database sucessfully');
 });

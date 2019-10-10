@@ -82,11 +82,12 @@ create = async (req, res, next) => {
 
   update = async (req, res, next) => {
     const newAttributes = this.filterParams(req.body, this.whitelist);
+    console.log('newAttributes', newAttributes, 'Body', req.body,  'whitelist', this.whitelist);
     try {
     User.findByIdAndUpdate(req.currentUser._id, newAttributes, (err, doc)=>{
       if(err) {
         throw new Error(err);
-      }  
+      }
         res.status(200).json(doc);
     });
   } catch (err) {
