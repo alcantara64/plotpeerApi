@@ -69,7 +69,7 @@ UserSchema.set('toJSON', {
 // Validate  is not taken
 UserSchema
   .path('email')
-  .validate((email, respond) => {
+  .validate(function(email, respond) {
     UserModel.findOne({ email })
       .then((user) => {
         respond(user ? false : true);
@@ -147,16 +147,17 @@ UserSchema.methods = {
         _id: this._id,
         email: this.email,
         comfirmStatus: true,
+
       },
       Constants.security.sessionSecret, {
-      expiresIn: Constants.security.sessionExpiration,
+      expiresIn: '24h',
     });
   },
   setComfirmationToken() {
-    this.emailComfirmToken = this.generateComfirmationUrlToken;
+    this.emailComfirmToken = this.generateComfirmationUrlToken();
   },
    getConfirmationUrl() {
-    return `${process.env.HOST}/confirmation/${this.generateToken()}`;
+    return `${process.env.HOST}/confirmation/${this.generateComfirmationUrlToken()}`;
   },
    getForgotPasswordToken() {
     return jwt.sign(

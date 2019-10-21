@@ -1,17 +1,7 @@
 import passport  from 'passport';
 import request  from 'request';
-//import { Strategy as InstagramStrategy }  from 'passport-instagram';
-//import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as FacebookStrategy }  from 'passport-facebook';
 import { Strategy as LinkedInStrategy } from 'passport-linkedin-oauth2';
-//import { Strategy as SnapchatStrategy } from 'passport-snapchat';
-//import { Strategy as TwitterStrategy } from 'passport-twitter';
-//import { Strategy as GitHubStrategy } from  'passport-github';
-//import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
-
-//import { Strategy as OpenIDStrategy } from 'passport-openid';
-//import { OAuthStrategy }  from 'passport-oauth';
-//import { OAuth2Strategy } from 'passport-oauth';
 const _ = require('lodash');
 
 import  User  from '../models/user';

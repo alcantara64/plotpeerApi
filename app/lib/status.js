@@ -5,5 +5,5 @@ module.exports = {
   UNAUTHORIZED: 401,
   PRECONDITION_FAILED: 412,
   SERVER_ERROR: 500,
-  TIMEOUT : 408
-}
+  TIMEOUT: 408,
+};

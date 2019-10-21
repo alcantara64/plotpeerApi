@@ -14,6 +14,7 @@ import UsersController from './controllers/users.controller';
 import PostsController from './controllers/posts.controller';
 import ProjectController from './controllers/projects.controller';
 import Admincontroller from './controllers/admin.controller';
+import MessageController from './controllers/message.controller';
 
 import multer from 'multer';
 const upload = multer({ storage: storage });
@@ -33,6 +34,8 @@ routes.post('/auth/login', AuthController.login);
 routes.post('/auth/forgotpassword', AuthController.forgotPassword);
 routes.get('/auth/resetpassword/:token', AuthController.resetPassword);
 routes.post('/auth/register', AuthController.create);
+routes.post('/auth/changePassword', authenticate, AuthController.changePassword);
+//routes.get('/auth/comfirm-mail/:token', AuthController.)
 
 // Users
 // routes.get('/user/dashboard',authenticate, UsersController.dashboard);
@@ -40,11 +43,7 @@ routes.get('/users', UsersController.search);
 routes.get('/users/me', authenticate, UsersController.fetch);
 routes.put('/users/me', authenticate, UsersController.update);
 routes.delete('/users/me', authenticate, UsersController.delete);
-routes.get(
-  '/users/:username',
-  UsersController._populate,
-  UsersController.fetch
-);
+routes.get( '/users/:username', UsersController._populate, UsersController.fetch);
 routes.post('/users', UsersController.create);
 
 // Wallet Routes
@@ -60,7 +59,7 @@ routes.get('/transactions/:id', authenticate, Transaction.one);
 // projects
 routes.get('/projects', ProjectController.search);
 routes.post('/projects', authenticate, ProjectController.create);
-routes.get( '/projects/:id', ProjectController.fetch);
+routes.get( '/projects/:id', ProjectController.getProject);
 routes.delete('/projects/:id', authenticate, ProjectController.delete);
 
 // kyc
@@ -69,6 +68,11 @@ routes.post(
   [authenticate, upload.single('file')],
   kycController.create
 );
+
+routes.get('/messages', authenticate, MessageController.getMessages);
+routes.get('/message:id', authenticate, MessageController.getMessage);
+routes.post('/message', authenticate, MessageController.create);
+routes.put('/message', authenticate, MessageController.update);
 
 // Post
 routes.get('/posts', PostsController.search);
@@ -80,13 +84,14 @@ routes.delete('/posts/:id', authenticate, PostsController.delete);
 routes.get('/admin', accessControl('admin'), MetaController.index);
 routes.get('/admin/users', accessControl('customer'), Admincontroller.users);
 routes.get('/admin/user/:id', accessControl('customer'), Admincontroller.user);
+
+routes.get('/admin/verification', Admincontroller.shuftiproVerifcation);
 routes.put('/admin/kyc', authenticate, Admincontroller.updateKycRequest);
 routes.get('/admin/kyc/:id', Admincontroller.shuftiproRequest);
-routes.get('/admin/shufti/notify', Admincontroller.shuftiproVerifcation);
 routes.get('/admin/kyc', authenticate, Admincontroller.getPendingKycRequest);
 
 routes.get('/admin/project', authenticate, Admincontroller.getprojects);
-routes.post('/admin/project', authenticate, Admincontroller.createProject);
+routes.post('/admin/project', [authenticate, upload.array('images', 10)], Admincontroller.createProject);
 routes.put('/admin/project', authenticate, Admincontroller.updateProject);
 routes.delete('/admin/project/:id', authenticate, Admincontroller.deleteProject);
 
