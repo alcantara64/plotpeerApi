@@ -95,6 +95,11 @@ routes.post('/admin/project', [authenticate, upload.array('images', 10)], Adminc
 routes.put('/admin/project', authenticate, Admincontroller.updateProject);
 routes.delete('/admin/project/:id', authenticate, Admincontroller.deleteProject);
 
+routes.get('/admin/messages', authenticate, Admincontroller.messages);
+routes.get('/admin/message/:id', authenticate, Admincontroller.message);
+routes.put('/admin/message', authenticate, Admincontroller.updateMessage);
+routes.delete('/admin/message/:id', authenticate, Admincontroller.deleteMessage);
+
 
 routes.use(errorHandler);
 
