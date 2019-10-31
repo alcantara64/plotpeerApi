@@ -12,6 +12,8 @@ class UsersController extends BaseController {
     'password',
     'aml',
     'kyc',
+    'investorType',
+    'markettingPreference',
 
   ];
 

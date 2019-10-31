@@ -46,6 +46,14 @@ const UserSchema = new Schema({
           enum: [null, 'pending', 'approved', 'rejected'],
           default: null,
             },
+        investorType: {
+          type: String,
+          default: null,
+        },
+        markettingPreference: {
+          type: String,
+          default: null,
+        },
 },
 
 {

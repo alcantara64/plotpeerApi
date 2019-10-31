@@ -5,6 +5,7 @@ import axios from 'axios';
 import BaseController from './base.controller';
 import User from '../models/user';
 import Project from '../models/project';
+import Message from '../models/message';
 import fs from 'fs';
 import appRoot from 'app-root-path';
 
@@ -36,6 +37,46 @@ class AdminController extends BaseController {
         next(err);
       }
   }
+  // #region messages
+  message = async (req, res, next) => {
+    const { id } = req.params;
+    try{
+      res.json(await Message.findById(id));
+    }catch(err) {
+      next(err);
+    }
+  }
+
+  messages = async (req, res, next) => {  
+    try{
+      res.json(await Message.find());
+    }catch(err) {
+      next(err);
+    }
+  }
+  updateMessage = async (req, res, next) =>{
+    const { payload, id } = req.body;
+    try{
+      Message.findByIdAndUpdate(id, payload, (err, doc)=>{
+       if(err) {
+         return res.sendStatus(400);
+       }
+       res.sendStatus(201);
+   });
+    }catch(err) {
+      next(err);
+    }
+  }
+  deleteMessage = async (req, res, next)=>{
+    const { id } = req.params;
+    try{
+      res.json(await Message.findByIdAndDelete(id));
+    }catch(err) {
+      next(err);
+    }
+  }
+
+// #endregion
 
   updateKycRequest = (req, res, next) => {
       const { payload, id } = req.body;
@@ -152,7 +193,7 @@ class AdminController extends BaseController {
    const { files } = req;
   const params = req.body;// this.filterParams(req.body, this.whitelist);
   let paths = [];
-files.forEach(file => {
+files.forEach((file) => {
   paths.push(file.path);
 });
 console.log('params', paths);
