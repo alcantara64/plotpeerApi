@@ -240,7 +240,7 @@ transport.sendMail(mail, (err, info) => {
   <p>${currentDate.toLocaleDateString()}</p><br/>
   please click the button to reset your password <a href='${
     process.env.HOST
-  }/auth/resetPassword?token=${token}'>reset Password</a>`, // html body
+  }/resetPassword/${token}'>reset Password</a>`, // html body
     };
     transport.sendMail(mail, (err, info) => {
       if (err) {

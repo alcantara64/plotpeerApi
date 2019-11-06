@@ -32,11 +32,11 @@ routes.get('/', authenticate, MetaController.index);
 // Authentication
 routes.post('/auth/login', AuthController.login);
 routes.post('/auth/forgotpassword', AuthController.forgotPassword);
-routes.get('/auth/resetpassword/:token', AuthController.resetPassword);
+routes.post('/auth/resetpassword', AuthController.resetPassword);
 routes.post('/auth/register', AuthController.create);
 routes.post('/auth/changePassword', authenticate, AuthController.changePassword);
-routes.post('/auth/verify', AuthController.verifyEmail); 
-//routes.get('/auth/comfirm-mail/:token', AuthController.)
+routes.post('/auth/verify', AuthController.verifyEmail);
+// routes.get('/auth/comfirm-mail/:token', AuthController.)
 
 // Users
 // routes.get('/user/dashboard',authenticate, UsersController.dashboard);

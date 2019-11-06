@@ -87,7 +87,6 @@ changePassword = async(req, res, next) =>{
 }
 
   forgotPassword = async (req, res, next) => {
-    console.log(req.body.email);
     async.waterfall([
       function(done) {
         User.findOne({
@@ -110,7 +109,9 @@ changePassword = async(req, res, next) =>{
       },
       function(user, token, done) {
         // eslint-disable-next-line max-len
-        User.findByIdAndUpdate({ _id: user._id }, { reset_password_token: token, reset_password_expires: Date.now() + 86400000 }, { upsert: true, new: true }).exec(function(err, newUser) {
+        console.log('User Id', user._id);
+        User.findByIdAndUpdate(user._id, { reset_password_token: token, reset_password_expires: Date.now() + 86400000 }, { upsert: true, new: true }).exec(function(err, newUser) {
+          console.log(newUser);
           done(err, token, newUser);
         });
       },
@@ -123,6 +124,7 @@ changePassword = async(req, res, next) =>{
     });
   }
   resetPassword = async (req, res, next) => {
+    console.log('request token', req.body.token)
     User.findOne({
       reset_password_token: req.body.token,
       reset_password_expires: {
