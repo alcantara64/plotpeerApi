@@ -1,5 +1,6 @@
 import BaseController from './base.controller';
 import User from '../models/user';
+import EmailSender from '../lib/email';
 
 
 class UsersController extends BaseController {
@@ -96,6 +97,19 @@ create = async (req, res, next) => {
     next(err);
   }
   }
+sendVerificationMail = async (req, res, next) =>{
+  if (!req.currentUser) {
+    return res.sendStatus(403);
+  }
+  try {
+     const currentUser = await User.findById(req.currentUser._id);
+     const comfirmationToken = currentUser.getConfirmationUrl();
+     EmailSender.sendConfirmationMail(currentUser.firstname, currentUser.email, comfirmationToken);
+    res.sendStatus(200);
+  } catch(err) {
+    next(err);
+  }
+}
 
 
   delete = async (req, res, next) => {

@@ -35,6 +35,7 @@ routes.post('/auth/forgotpassword', AuthController.forgotPassword);
 routes.get('/auth/resetpassword/:token', AuthController.resetPassword);
 routes.post('/auth/register', AuthController.create);
 routes.post('/auth/changePassword', authenticate, AuthController.changePassword);
+routes.post('/auth/verify', AuthController.verifyEmail); 
 //routes.get('/auth/comfirm-mail/:token', AuthController.)
 
 // Users
@@ -45,6 +46,7 @@ routes.put('/users/me', authenticate, UsersController.update);
 routes.delete('/users/me', authenticate, UsersController.delete);
 routes.get( '/users/:username', UsersController._populate, UsersController.fetch);
 routes.post('/users', UsersController.create);
+routes.get('/user/sendmail', authenticate, UsersController.sendVerificationMail);
 
 // Wallet Routes
 routes.get('/wallet', authenticate, walletController.getWallet);

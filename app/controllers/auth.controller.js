@@ -47,7 +47,7 @@ class AuthController extends BaseController {
         balance: 0,
       });
       await wallet.save();
-      EmailSender.sendConfirmationMail(firstname, email, comfirmationToken);
+     EmailSender.sendConfirmationMail(firstname, email, comfirmationToken);
       res.status(201).json({ token });
     } catch(err) {
       err.status = 400;
@@ -173,7 +173,7 @@ changePassword = async(req, res, next) =>{
 }
 
 verifyEmail = (req, res, next) =>{
-  const { token } = req.params;
+  const { token } = req.body;
   const { sessionSecret } = Constants.security;
   jwt.verify(token, sessionSecret, async (err, decoded) => {
     if (err) {
@@ -184,12 +184,13 @@ verifyEmail = (req, res, next) =>{
     // If token is decoded successfully, find user and comfirm
 
     try {
-     User.findByIdAndUpdate(decoded.id, {
-       comfirmStatus: true }, (err, res)=>{
+     User.findByIdAndUpdate(decoded._id, {
+       comfirmStatus: true }, (err, doc)=>{
          if(err) {
-          return res.sendStatus(400);
+           console.error('error', err);
+          return res.status(400);  
          }
-         if(res)return res.sendStatus(201);
+         if(doc)return res.status(201);
        });
       next();
     } catch(err) {

@@ -9,28 +9,26 @@ class MessageController extends BaseController {
 
   whitelist = [
     'email',
+    'body',
+    'subject',
   ];
-
 
   getMessages = async (req, res, next) => {
     try {
     const userId = req.currentUser._id;
-        console.log('User', userId);
       const messages =
         await Message.find({ user: userId });
-
       res.json( messages);
     } catch(err) {
       next(err);
     }
   }
 
-
   getMessage = (req, res, next) => {
     const { id } = req.params;
     Message.findById(id, (err, doc)=>{
       if(err) {
-        new Error('Project not fiund');
+        new Error(err);
       }
      return res.json(doc);
     });

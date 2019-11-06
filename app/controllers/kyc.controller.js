@@ -62,7 +62,6 @@ class KycController extends BaseController {
   update = async (req, res, next) => {
      const newAttributes = this.filterParams(req.body, this.whitelist);
      const updatedUser = Object.assign({}, req.currentUser, newAttributes);
-  
     try {
       res.status(200).json(await updatedUser.save());
     } catch (err) {

@@ -5,13 +5,11 @@ import Constants from '../config/constants';
 const { sessionSecret } = Constants.security;
 export default function authenticate(req, res, next) {
   const { authorization } = req.headers;
-  console.log('authorization', authorization);
   if(!authorization){
-    return   res.sendStatus(401);
+    return res.sendStatus(401);
   }
   let Bearer = authorization.split(' ');
   const token =Bearer[1];
-  console.log("token", token);
   jwt.verify(token, sessionSecret, async (err, decoded) => {
     if (err) {
       console.error(err)

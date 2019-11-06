@@ -13,7 +13,7 @@ import Constants from './config/constants';
 
   useNewUrlParser: true,
   // useCreateIndex: true,
-  // useFindAndModify: false,
+   useFindAndModify: false,
   autoIndex: false, // Don't build indexes
   reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
   reconnectInterval: 500, // Reconnect every 500ms
