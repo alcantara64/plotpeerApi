@@ -18,7 +18,7 @@ class EmailSender {
     });
   };
 
-  sendConfirmationMail = (name, user, token) => {
+  sendConfirmationMail = (name, user, link) => {
     const transport = this.emailSetup();
 
     let mail = {
@@ -118,7 +118,7 @@ class EmailSender {
                         </td>
                       </tr>
                     </table>
-                    <img src="https://plotpeer.herokuapp.com/static/media/logo.9f517a87.png" alt="Hatch" border="0" height="50" style="margin-top: 50px; margin-bottom: 50px;" />
+                    <img src="https://plotpeer.herokuapp.com/static/media/logo.9f517a87.png" alt="plotpeer" border="0" height="50" style="margin-top: 50px; margin-bottom: 50px;" />
                     <table bgcolor="#100B08" class="head" style="background: #488dfb;" cellpadding="0" cellspacing="0" border="0" border-collapse="collapse" width="100%">
                       <tr>
                         <td style="text-align: center;" colspan="3">
@@ -135,7 +135,7 @@ class EmailSender {
                           <table cellpadding="0" cellspacing="0" border-collapse="collapse" class="button" width="100%">
                             <tr>
                               <td>
-                                <a href="${process.env.HOST}/verify/${token}" target="_blank" style="font-size: 15px;">Confirm my email</a>
+                                <a href="${link}" target="_blank" style="font-size: 15px;">Confirm my email</a>
                               </td>
                             </tr>
                           </table>
@@ -168,7 +168,7 @@ class EmailSender {
                         </td>
                       </tr>
                       <tr>
-                        <td colspan="3" style="padding: 0px 80px; font-size: 20px; text-align: center; color: #595f63;  font-size: 20px;">If you have any questions about Hatch please don’t hesitate to get in touch.</td>
+                        <td colspan="3" style="padding: 0px 80px; font-size: 20px; text-align: center; color: #595f63;  font-size: 20px;">If you have any questions about plotpeer please don’t hesitate to get in touch.</td>
                       </tr>
                       <tr>
                         <td style="padding: 40px;" align="center">
@@ -211,22 +211,22 @@ class EmailSender {
     });
   };
 
-  messaging = (from='info@plotpeer.com', to, subject='', message) =>{
+  messaging = (from = 'info@plotpeer.com', to, subject = '', message) => {
     const transport = this.emailSetup();
 
-let mail = {
-   from: from,
-   to: to,
-   subject: subject,
-   html: message,
-};
-transport.sendMail(mail, (err, info) => {
-  if (err) {
-    console.error(err);
-  }
-  console.log(info);
-});
-  }
+    let mail = {
+      from: from,
+      to: to,
+      subject: subject,
+      html: message,
+    };
+    transport.sendMail(mail, (err, info) => {
+      if (err) {
+        console.error(err);
+      }
+      console.log(info);
+    });
+  };
 
   resetLink = (user, name, token) => {
     const transport = this.emailSetup();

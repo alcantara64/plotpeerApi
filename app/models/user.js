@@ -165,7 +165,7 @@ UserSchema.methods = {
     this.emailComfirmToken = this.generateComfirmationUrlToken();
   },
    getConfirmationUrl() {
-    return `${process.env.HOST}/confirmation/${this.generateComfirmationUrlToken()}`;
+    return `${process.env.HOST}/verify/${this.generateComfirmationUrlToken()}`;
   },
    getForgotPasswordToken() {
     return jwt.sign(
