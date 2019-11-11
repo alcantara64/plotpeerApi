@@ -51,8 +51,8 @@ class TransactionController extends BaseController {
       if (to && from == null) query.createdAt = { $lt: to }
       if (from && to) query.createdAt = { $lt: to, $gte: from }
 
-      const transactions = await Transaction.find(query).sort({ createdAt: -1 })
-      console.log(transactions)
+      const transactions = await Transaction.find(query).populate('user').sort({ createdAt: -1 })
+      
 
         return res.status(HttpStatus.OK).json({
             status: 'success',
