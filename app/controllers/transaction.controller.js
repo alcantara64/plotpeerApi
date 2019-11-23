@@ -1,7 +1,7 @@
 import BaseController from './base.controller';
 import User from '../models/user';
-import HttpStatus from '../lib/status'
-import Transaction from '../models/transaction'
+import HttpStatus from '../lib/status';
+import Transaction from '../models/transaction';
 
 
 class TransactionController extends BaseController {
@@ -12,23 +12,22 @@ class TransactionController extends BaseController {
      */
   async one(req, res, next) {
     try {
-        const transactionId = req.params.id
-        const transaction = await Transaction.findOne({ _id: transactionId })
+        const transactionId = req.params.id;
+        const transaction = await Transaction.findOne({ _id: transactionId });
 
         return res.status(HttpStatus.OK).json({
           status: 'success',
           message: 'Transaction fetched successfully',
-          data: transaction
-        })
-
+          data: transaction,
+        });
     } catch (error) {
-        console.log("error > ", error)
-        const err = new Error('Error fetching transaction')
-        err.status = HttpStatus.SERVER_ERROR
-        next(err)
+        console.log('error > ', error);
+        const err = new Error('Error fetching transaction');
+        err.status = HttpStatus.SERVER_ERROR;
+        next(err);
     }
   }
-    
+
   /**
     * Get transactions
     * @description Get all transactions
@@ -40,31 +39,29 @@ class TransactionController extends BaseController {
     */
   async all(req, res, next) {
     try {
-
-      const {type, to, from, status} = req.query
-      const query = { }
+      const { type, to, from, status } = req.query;
+      const query = { };
 
       // build up query
-      if (status) query.status = Transaction.Status[status.toUpperCase()]
-      if (type) query.type = Transaction.Type[type.toUpperCase()]
-      if (from && to == null) query.createdAt = { $gte: from }
-      if (to && from == null) query.createdAt = { $lt: to }
-      if (from && to) query.createdAt = { $lt: to, $gte: from }
+      if (status) query.status = Transaction.Status[status.toUpperCase()];
+      if (type) query.type = Transaction.Type[type.toUpperCase()];
+      if (from && to == null) query.createdAt = { $gte: from };
+      if (to && from == null) query.createdAt = { $lt: to };
+      if (from && to) query.createdAt = { $lt: to, $gte: from };
 
-      const transactions = await Transaction.find(query).populate('user').sort({ createdAt: -1 })
-      
+      const transactions = await Transaction.find(query).populate('user').sort({ createdAt: -1 });
+
 
         return res.status(HttpStatus.OK).json({
             status: 'success',
             message: 'All transactions fetched successfully',
-            data: {transactions}
-        })
-
+            data: { transactions },
+        });
     } catch (error) {
-        console.log("error > ", error)
-        const err = new Error('Error fetching transactions')
-        err.status = HttpStatus.SERVER_ERROR
-        next(err)
+        console.log('error > ', error);
+        const err = new Error('Error fetching transactions');
+        err.status = HttpStatus.SERVER_ERROR;
+        next(err);
     }
   }
 
@@ -75,20 +72,19 @@ class TransactionController extends BaseController {
      */
     async self(req, res, next) {
         try {
-            const userId = req.currentUser._id
-            const transactions = await Transaction.find({ user: userId })
+            const userId = req.currentUser._id;
+            const transactions = await Transaction.find({ user: userId });
 
             return res.status(HttpStatus.OK).json({
             status: 'success',
             message: 'User transactions fetched successfully',
-            data: transactions
-            })
-
+            data: transactions,
+            });
         } catch (error) {
-            console.log("error > ", error)
-            const err = new Error('Error fetching user transactions')
-            err.status = HttpStatus.SERVER_ERROR
-            next(err)
+            console.log('error > ', error);
+            const err = new Error('Error fetching user transactions');
+            err.status = HttpStatus.SERVER_ERROR;
+            next(err);
         }
     }
 }

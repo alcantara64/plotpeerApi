@@ -4,12 +4,9 @@ import User from '../models/user';
 import jwt from 'jsonwebtoken';
 import Wallet from '../models/wallet';
 import EmailSender from '../lib/email';
-import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import Constants from '../config/constants';
-import bcrypt from 'bcrypt';
 import async from 'async';
-import constants from '../config/constants';
 
 class AuthController extends BaseController {
   whitelist = ['email', 'password', 'firstname', 'lastname', 'phone'];
@@ -70,13 +67,13 @@ changePassword = async(req, res, next) =>{
    console.log('is Authenticated', user.authenticate(oldPassword));
   const encrypytedPassword = await user._hashPassword( newPassword, Constants.security.saltRounds);
    console.log('Password', encrypytedPassword);
-   User.findByIdAndUpdate(id, { password: encrypytedPassword }, (err, response)=>{
+   User.findByIdAndUpdate(id, { password: encrypytedPassword }, (err)=>{
      if(!err) {
      return res.status(201).json();
      }
      return next(err);
    });
-    }catch(err){
+    }catch(err) {
      new Error(err);
      next(err);
     }
@@ -86,9 +83,9 @@ changePassword = async(req, res, next) =>{
    }
 }
 
-  forgotPassword = async (req, res, next) => {
+  forgotPassword = async (req, res) => {
     async.waterfall([
-      function(done) {
+      (done) => {
         User.findOne({
           email: req.body.email,
         }).exec((err, user) => {
@@ -100,65 +97,49 @@ changePassword = async(req, res, next) =>{
           }
         });
       },
-      function(user, done) {
+      (user, done) =>{
         // create the random token
         crypto.randomBytes(20, function(err, buffer) {
           let token = buffer.toString('hex');
           done(err, user, token);
         });
       },
-      function(user, token, done) {
+      (user, token, done) => {
         // eslint-disable-next-line max-len
-        console.log('User Id', user._id);
-        User.findByIdAndUpdate(user._id, { reset_password_token: token, reset_password_expires: Date.now() + 86400000 }, { upsert: true, new: true }).exec(function(err, newUser) {
-          console.log(newUser);
+        console.log('User Id', user._id, token, Date.now());
+        User.findByIdAndUpdate(user._id, { 'reset_password_token': token, 'reset_password_expires': Date.now() + 86400000 }, { upsert: true, new: true, strict: false }).exec((err, newUser)=> {
+          console.log('new User updated', newUser);
           done(err, token, newUser);
         });
       },
-      function(token, user, done) {
-        EmailSender.resetLink(user.email, user.firstname, token);
+      (token, user) =>{
+       EmailSender.resetLink(user.email, user.firstname, token);
         res.status(200).json({ message: 'sent' });
       },
-    ], function(err) {
+    ], (err) => {
       return res.status(422).json({ message: err });
     });
   }
-  resetPassword = async (req, res, next) => {
-    console.log('request token', req.body.token)
+  resetPassword = async (req, res) => {
+    console.log('request token', req.body.token);
     User.findOne({
       reset_password_token: req.body.token,
       reset_password_expires: {
         $gt: Date.now(),
       },
-    }).exec(function(err, user) {
+    }).exec(async (err, user) => {
       if (!err && user) {
         if (req.body.newPassword === req.body.verifyPassword) {
-          user.hash_password = bcrypt.hashSync(req.body.newPassword, 10);
+          const hashedPassword = await user._hashPassword(req.body.newPassword, Constants.security.saltRounds);
+          user.password = hashedPassword;
           user.reset_password_token = undefined;
           user.reset_password_expires = undefined;
-          user.save(function(err) {
-            if (err) {
+          User.findByIdAndUpdate(user.id, { password: hashedPassword, reset_password_token: undefined, reset_password_expires: undefined }, (err)=>{
+            if(err) {
               return res.status(422).send({
-                message: err,
-              });
+                message: err });
             } else {
-              let data = {
-                to: user.email,
-                from: `noreply@plootpeer.com`,
-                template: 'reset-password-email',
-                subject: 'Password Reset Confirmation',
-                context: {
-                  name: user.lastname,
-                },
-              };
-
-              nodemailer.smtpTransport.sendMail(data, function(err) {
-                if (!err) {
-                  return res.json({ message: 'Password reset' });
-                } else {
-                  return next(err);
-                }
-              });
+              return res.status(200).json();
             }
           });
         } else {
@@ -184,13 +165,12 @@ verifyEmail = (req, res, next) =>{
     }
 
     // If token is decoded successfully, find user and comfirm
-
     try {
      User.findByIdAndUpdate(decoded._id, {
        comfirmStatus: true }, (err, doc)=>{
          if(err) {
            console.error('error', err);
-          return res.status(400);  
+          return res.status(400);
          }
          if(doc)return res.status(201);
        });
