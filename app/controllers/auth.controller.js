@@ -172,7 +172,7 @@ verifyEmail = (req, res, next) =>{
            console.error('error', err);
           return res.status(400);
          }
-         if(doc)return res.status(201);
+         if(doc)return res.status(201).json();
        });
       next();
     } catch(err) {
