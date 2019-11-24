@@ -58,7 +58,6 @@ class TransactionController extends BaseController {
             data: { transactions },
         });
     } catch (error) {
-        console.log('error > ', error);
         const err = new Error('Error fetching transactions');
         err.status = HttpStatus.SERVER_ERROR;
         next(err);
