@@ -37,7 +37,7 @@
   "homepage": "http://plotpeer.com/",
   "dependencies": {
     "app-root-path": "^2.2.1",
-    "async": "^3.1.0",
+    "async": "^3.2.2",
     "async-waterfall": "^0.1.5",
     "axios": "^0.19.0",
     "babel-cli": "^6.18.0",
